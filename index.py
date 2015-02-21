@@ -58,7 +58,7 @@ def getDataFromCassandra():
 	
 	return resultCassandraAfterSync
 
-#Get the Date from Elastic Search, on ES it is possible to get the Range of dates
+#Get the Data from Elastic Search, on ES it is possible to get the Range of dates
 def getDataFromES():	
 	esResultAfterSync = []
 	doc = {
