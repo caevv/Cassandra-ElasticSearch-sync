@@ -29,20 +29,33 @@ from time import gmtime, strftime
 
 #This file contains the last time it was synced
 def getLastSync():
+	#First time sync
+	if not os.path.isfile("foo.txt"):
+		insertNewSync(True)
+
 	with open("foo.txt", "rb") as fh:
-		fh.seek(-36, os.SEEK_END)
+		fh.seek(-23, os.SEEK_END)
 		lastsync = fh.readlines()[-1].decode()
 
 	fh.close()
 	lastsync = str.join(' ', lastsync.split()[0:23]);
+	
 	return lastsync
 
+
 #Insert the new Sync Date
-def insertNewSync():
+def insertNewSync(first):
 	fo = open( "foo.txt", "a+" )
-	fo.write(strftime("%Y-%m-%d %H:%M:%S+0000", gmtime())+"\n")
+	#First time sync
+	if first:
+		fo.write("2000-01-01 10:00:00+0000"+"\n")
+	else:
+		fo.write(strftime("%Y-%m-%d %H:%M:%S+0000", gmtime())+"\n")
+
 	fo.close()
+
 	return
+
 
 #This will get all date on Cassandra, It is not possible on Cassandra to get a Range of Dates
 def getDataFromCassandra():
@@ -192,4 +205,4 @@ cassandraResultAfterSync = getDataFromCassandra()
 esResultAfterSync = getDataFromES()
 updateBasedOnCassandra()
 updateBasedOnES()
-insertNewSync()
+insertNewSync(None)
